@@ -37,9 +37,9 @@ Cemu のグラフィックパックの画面で、次の 2 つから選べます
 ## 入れ方
 
 1. [Releases](https://github.com/tompommax/MH3G-Simulator/releases/tag/charm-reroll-v1.0.0) から `MH3G_CharmTableReroll.zip` をダウンロードして展開します。
-2. 中の `MH3G_CharmTableReroll` フォルダを、Cemu の `graphicPacks` フォルダの中に入れます。`graphicPacks` フォルダは、Cemu のメニュー「ファイル」→「Cemu フォルダを開く」で開くフォルダの中にあります。
+2. 中の `MH3G_CharmTableReroll` フォルダを、Cemu の `graphicPacks` フォルダの中に入れます。`graphicPacks` フォルダは、Cemu のメニュー「ファイル」→「Open Cemu folder」で開くフォルダの中にあります。
    - リポジトリ一式をダウンロードした場合は、PowerShell で `cemu-charm-reroll/scripts/install.ps1` を実行しても、同じ場所に入れられます。
-3. Cemu のメニュー「オプション」→「グラフィックパック」を開き、`Monster Hunter 3 Ultimate` → `Mods` → `Charm Table Reroll (JP 3G HD)` にチェックを入れます。選び方は、右側のプルダウンで変えられます。
+3. Cemu のメニュー「設定」→「グラフィック パック」を開き、`Monster Hunter 3 Ultimate` → `Mods` → `Charm Table Reroll (JP 3G HD)` にチェックを入れます。選び方は、右側のプルダウンで変えられます。
 4. ゲームを起動します（起動中なら一度終了して、起動し直してください）。
 
 パッチが当たったかどうかは、Cemu の `log.txt` に次の行があるかで確かめられます。
