@@ -95,12 +95,6 @@ select:disabled { opacity: .5; }
 .version { font-size: 12px; font-weight: 400; color: var(--muted); white-space: nowrap; }
 .disclaimer { margin: 0; font-size: 12px; color: var(--muted); }
 
-.app-footer {
-  padding: 8px 16px 14px;
-  font-size: 12px;
-  color: var(--muted);
-}
-
 .loading { padding: 48px 16px; text-align: center; color: var(--muted); }
 .loading.error { color: #b33; white-space: pre-wrap; }
 
@@ -294,7 +288,7 @@ select:disabled { opacity: .5; }
 }
 
 @media (max-width: 480px) {
-  .app-header, .app-footer { padding-left: 12px; padding-right: 12px; }
+  .app-header { padding-left: 12px; padding-right: 12px; }
   .layout { padding: 0 12px; }
   .basic-grid { grid-template-columns: minmax(0, 1fr); }
   .skill-columns { grid-template-columns: minmax(0, 1fr); }
