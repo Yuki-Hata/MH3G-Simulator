@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MH3G スキルシミュレーター</title>
+  <meta name="description" content="モンスターハンター3G (MH3G) の装備の組み合わせを探すスキルシミュレーターのブラウザ版。欲しいスキルと条件から、防具・お守り・装飾品の組み合わせを最終防御力の高い順に表示します。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDGothic&family=BIZ+UDPGothic:wght@400;700&display=swap">
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="main.js"></script>
+</head>
+<body>
+  <header class="app-header">
+    <h1>MH3G スキルシミュレーター <span class="version" id="version"></span></h1>
+    <p class="disclaimer">非公式のファンメイドツールです。株式会社カプコンとは関係ありません。</p>
+  </header>
+
+  <div class="loading" id="loading">
+    <p id="loadingText">読み込み中… (初回は数秒かかります)</p>
+  </div>
+
+  <main class="layout" id="app" hidden>
+    <section class="conditions" aria-label="検索条件">
+      <fieldset class="card">
+        <legend>基本条件</legend>
+        <div class="basic-grid">
+          <label>職業 <select id="class"><option>剣士</option><option>ガンナー</option></select></label>
+          <label>性別 <select id="gender"><option>男</option><option>女</option></select></label>
+          <label>レア度上限 <input type="number" id="rarity" min="1" max="10" value="10" inputmode="numeric"></label>
+          <label>武器スロット <input type="number" id="weaponSlots" min="0" max="3" value="0" inputmode="numeric"></label>
+          <label>最大表示件数 <input type="number" id="maxResults" min="10" max="2000" value="200" step="10" inputmode="numeric"></label>
+          <label class="check"><input type="checkbox" id="avoidNegative" checked> マイナススキルを発動させない</label>
+        </div>
+      </fieldset>
+
+      <fieldset class="card skills-card">
+        <legend>欲しいスキル</legend>
+        <p class="hint">一覧のスキルをクリック (絞り込み欄では Enter) で追加、追加したスキルの × で外します。</p>
+        <div class="skill-columns">
+          <div class="skill-pick">
+            <input type="search" id="skillFilter" placeholder="スキル名で絞り込み" autocomplete="off">
+            <ul class="list" id="skillList" aria-label="スキル一覧"></ul>
+          </div>
+          <div class="skill-chosen">
+            <ul class="list" id="requirementList" aria-label="追加したスキル"></ul>
+            <button type="button" id="clearRequirements">全てクリア</button>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class="card">
+        <legend>お守り</legend>
+        <p class="hint">スキル1 を「（なし）」でお守りなし。入力したお守りはこのブラウザに自動で保存されます。</p>
+        <div class="charm-modes">
+          <label><input type="radio" name="charmMode" id="charmInput" checked> 入力したお守りで検索</label>
+          <label><input type="radio" name="charmMode" id="charmAuto"> 自動計算 (成立するお守りを探す)</label>
+        </div>
+        <label class="inline">自動計算で使うテーブル <select id="charmTable" disabled></select></label>
+        <fieldset class="charm-editor" id="charmEditor">
+          <div class="charm-row">
+            <span>スキル1</span><select id="skill1" class="skill"></select><select id="points1" class="points"></select>
+            <span>スロット</span><select id="slots" class="points"></select>
+          </div>
+          <div class="charm-row">
+            <span>スキル2</span><select id="skill2" class="skill"></select><select id="points2" class="points"></select>
+          </div>
+        </fieldset>
+        <p class="charm-tables" id="charmTables"></p>
+      </fieldset>
+    </section>
+
+    <section class="results" id="results" aria-label="検索結果">
+      <div class="toolbar">
+        <button type="button" id="search" class="primary">検索</button>
+        <button type="button" id="cancel" disabled>中止</button>
+        <progress id="progress" max="100" value="0"></progress>
+        <span class="status" id="status" role="status"></span>
+        <span class="spacer"></span>
+        <button type="button" id="exportAll" disabled>テキスト保存</button>
+        <button type="button" id="clearExcluded">除外を解除</button>
+      </div>
+      <p class="excluded" id="excluded"></p>
+
+      <div class="table-wrap" id="tableWrap" tabindex="0">
+        <table class="result-table">
+          <thead>
+            <tr>
+              <th class="num">No</th>
+              <th>防御(初→最終)</th>
+              <th>頭</th><th>胴</th><th>腕</th><th>腰</th><th>脚</th>
+              <th id="charmHeader">お守り</th>
+              <th class="auto-only">出るお守り</th>
+              <th class="auto-only">出るテーブル</th>
+              <th>空きスロット</th>
+            </tr>
+          </thead>
+          <tbody id="resultBody"></tbody>
+        </table>
+      </div>
+
+      <div class="selection-actions" id="selectionActions" hidden>
+        <span class="caption">選んだ結果:</span>
+        <span class="group" id="excludeButtons"><span class="caption">除外して再検索</span></span>
+        <span class="group">
+          <button type="button" id="copyOne">コピー</button>
+          <button type="button" id="saveOne">テキスト保存</button>
+        </span>
+      </div>
+      <pre class="detail" id="detail"></pre>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    元のツール: <a href="https://github.com/tompommax/MH3G-Simulator" rel="noopener">TomPomMax / MH3G-Simulator</a> (Windows 版。ソースコードは <a href="LICENSE.txt">MIT License</a>)。
+    このページはその検索の仕組みをそのままブラウザで動かしたものです。ゲーム内の名称等の権利は各権利者に帰属します。
+  </footer>
+
+  <ul class="context-menu" id="contextMenu" role="menu" hidden></ul>
+</body>
+</html>

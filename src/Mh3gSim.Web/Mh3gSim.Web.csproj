@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk.WebAssembly">
+
+  <!--
+    ブラウザ版。検索ロジック (Mh3gSim.Core) をそのまま WebAssembly にして、画面の裏 (Web Worker) で動かす。
+    画面は wwwroot の HTML / JS。GitHub Pages には .github/workflows/pages.yml で publish したものを置く。
+  -->
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <!-- JSExport / JSImport に必要 -->
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Version>1.2.0</Version>
+    <!-- スキル一覧の並び (系統名の五十音順) を Windows 版と合わせるため、日本語の照合順序を使う -->
+    <InvariantGlobalization>false</InvariantGlobalization>
+    <!-- GameData は System.Text.Json のリフレクションで読み込むので、トリミング後も使えるようにする -->
+    <JsonSerializerIsReflectionEnabledByDefault>true</JsonSerializerIsReflectionEnabledByDefault>
+    <!-- GitHub Pages は事前圧縮した .br / .gz を使わない (自分で圧縮して送る) ので作らない -->
+    <CompressionEnabled>false</CompressionEnabled>
+  </PropertyGroup>
+
+  <!-- 配布用はネイティブにコンパイルして検索を速くする (wasm-tools ワークロードが必要) -->
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <RunAOTCompilation>true</RunAOTCompilation>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Mh3gSim.Core\Mh3gSim.Core.csproj" />
+    <!-- データ読み込み用の型 (GameData の内部クラス) をトリミングで消さない -->
+    <TrimmerRootAssembly Include="Mh3gSim.Core" />
+  </ItemGroup>
+
+  <!-- 公開するページにもライセンスの全文を置く (ページ下部からリンク) -->
+  <Target Name="CopyLicenseToSite" AfterTargets="Publish">
+    <Copy SourceFiles="..\..\LICENSE" DestinationFiles="$(PublishDir)wwwroot\LICENSE.txt" />
+  </Target>
+
+</Project>

@@ -9,9 +9,15 @@
 - 収録データ: 防具 1651 件、装飾品 196 件、スキル系統 122 件
 - 生産に必要な素材と HR（入手できる時期）には対応していません。進行度に合わせたい時は「レア度上限」で絞り込んでください。
 
+## ブラウザ版
+
+https://yuki-hata.github.io/MH3G-Simulator/ を開くと、インストールなしでブラウザから使えます（パソコン・スマホ）。
+検索の仕組みとデータは Windows 版と同じものをそのまま WebAssembly にして動かしています（[src/Mh3gSim.Web](src/Mh3gSim.Web)）。
+入力したお守りはそのブラウザに保存されます。`main` に push すると GitHub Actions（[pages.yml](.github/workflows/pages.yml)）で作り直して公開し直します。
+
 ## ダウンロード
 
-[Releases の最新版](../../releases/latest) から `MH3GSkillSim.exe` をダウンロードして、そのまま実行してください。インストールは不要です。
+[Releases の最新版](https://github.com/tompommax/MH3G-Simulator/releases/latest) から `MH3GSkillSim.exe` をダウンロードして、そのまま実行してください。インストールは不要です。
 
 ## 動作環境
 
