@@ -22,8 +22,13 @@ jobs:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-dotnet@v4
+        id: setup
         with:
           dotnet-version: 9.0.x
+
+      # ランナーに入っている新しい SDK ではなく、上で入れた .NET 9 の SDK とワークロードを使う
+      - name: .NET 9 の SDK を使う
+        run: dotnet new globaljson --sdk-version ${{ steps.setup.outputs.dotnet-version }} --force
 
       - name: WebAssembly のビルドツールを入れる
         run: dotnet workload install wasm-tools
